@@ -1,13 +1,12 @@
 #!/bin/bash
 
 # Install rpimonitor on a pine64 running ubuntu (may work for debian also)
-# Heavily based on work from tkaiser
 #
 # Run latest version directly from github when logged in as root / sudo with
 # wget -q -O - https://raw.githubusercontent.com/pfeerick/pine64-scripts/master/install-rpimonitor.sh | /bin/bash
 #
 # Original code lifted from http://kaiser-edv.de/tmp/4U4tkD/install-rpi-monitor-for-a64.sh
-# With some other code also provided by tkaiser
+# Original code written by tkaiser, as well as assuggestions for a deriverative work
 #
 # This modification written by pfeerick
 
@@ -18,8 +17,8 @@ fi
 
 useEncodedPublicKey()
 {
-   echo -e "\nUsing backup copy of public key for Armbian package list"
-   cd /tmp && echo "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IFNLUyAxLjEuNgpD
+    echo -e "\nUsing backup copy of public key for Armbian package list"
+    cd /tmp && echo "LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IFNLUyAxLjEuNgpD
 b21tZW50OiBIb3N0bmFtZToga2V5cy5mc3Bwcm9kdWN0aW9ucy5iaXoKCm1RSU5CRlVHOHA0QkVB
 REdsc2VHRm1kampmbW9YdEhwWnhxZ1lIR3dlQ25HWjA1TGlHZ0VWZ2J2NVNyVHNKc3lPOEg4UnlC
 UAp4Z2JwS0VZK0pDVjFJbFlRUGFFM1RpbDEra3FtUjRYTktidWZqRXVxQVY0VkpXMzI2N3RZUnVK
@@ -76,36 +75,38 @@ YkwzZG1BMlVYeG5HSjN2czJ5YkZ5SEczYW9vdktKZldWeXR4T0pmRzdxajFBQ3JPWU9YZWtXbGN3
 NWxFaVlGY2NrdWtOcXEKRnYvQ1hoK0JaRmxRVDRERHZKbFkwL0tRRkZLb2dRPT0KPUkvUDgKLS0t
 LS1FTkQgUEdQIFBVQkxJQyBLRVkgQkxPQ0stLS0tLQo=" | base64 --decode > keyfile
 
-   if [ -f /tmp/keyfile ]; then
-      apt-key add /tmp/keyfile
-      local keyAddState=$?
+    if [ -f /tmp/keyfile ]; then
+        apt-key add /tmp/keyfile
+        local keyAddState=$?
 
-      rm /tmp/keyfile
+        rm /tmp/keyfile
 
-      if [ $keyAddState -ne 0 ]; then
-         echo -e "\033[0;31m\nUnable to add backup public key... exiting\033[0m"
+        if [ $keyAddState -ne 0 ]; then
+            echo -e "\033[0;31m\nUnable to add backup public key... exiting\033[0m"
 
-         if [ -f /etc/apt/sources.list.d/armbian.list ]; then
-            rm /etc/apt/sources.list.d/armbian.list
-         fi
+            if [ -f /etc/apt/sources.list.d/armbian.list ]; then
+               #remove if not Armbian
+               if [ ! -f /etc/armbian-release ]; then rm /etc/apt/sources.list.d/armbian.list; fi
+            fi
 
-         exit 2
-      fi
-   else
-      echo -e "\033[0;31m\nUnable to use provided backup public key... exiting\033[0m"
+            exit 2
+        fi
+    else
+        echo -e "\033[0;31m\nUnable to use provided backup public key... exiting\033[0m"
 
-      if [ -f /etc/apt/sources.list.d/armbian.list ]; then
-         rm /etc/apt/sources.list.d/armbian.list
-      fi
+        if [ -f /etc/apt/sources.list.d/armbian.list ]; then
+           #remove if not Armbian
+           if [ ! -f /etc/armbian-release ]; then rm /etc/apt/sources.list.d/armbian.list; fi
+        fi
 
-      exit 1
-   fi
+        exit 1
+    fi
 } #useEncodedPublicKey
 
 PatchRPiMonitor_for_sun50iw1p1()
 {
-   echo -e "\nNow patching RPi-Monitor to deal correctly with A64"
-   cd /etc/rpimonitor/ && echo "H4sIAGQt4VYAA+07a3fbNpb57F+B43ZG8kamRMmyvV7b56RJmmSnaX3yaGfPPDwQCUmsKVIDkLbV
+    echo -e "\nNow patching RPi-Monitor to deal correctly with A64"
+    cd /etc/rpimonitor/ && echo "H4sIAGQt4VYAA+07a3fbNpb57F+B43ZG8kamRMmyvV7b56RJmmSnaX3yaGfPPDwQCUmsKVIDkLbV
 Jv9pf8P+sr33AiBBirJsN92ze5ZoY4l4XNwX7gtUyDPuBWkyffL7tQG0o6Mj+oRW/6Tv/vDwcDwY
 jQYj6B8ORsPxEzbsiyzoy2W0SJMoS2U/E4tlzDPRvxVJxOMvgneuMi4ZeyLTNLtr3rbx/6Pt92Bp
 vaGADw8PNsh/NDwa+Vr+44MxfD4Z+KPxwfAJG3xpRJra/3P5f/WF2g78x/508YaJ20zyIIvShKEu
@@ -203,47 +204,54 @@ kZE6si4Yx73fAHWFV1BnwwdDIB0xOJUGUj0SzmOwMMpkcLBpJuuCKXgYQ2ykbCC9gMfHgnK11oDT
 6Xj3x98A6FEyco6mVR3XOD8e2D2wqa5e+bTi1+IXEpBg4bsHYLfhRJyw0ZjeOD1hR2P2+QFgh+tg
 Jb44uQtQ7luJbFvb2ta2trWtbW1rW9va1ra2ta1tbWtb29rWtra1rW1ta1vb2ta2trWtbW1rW9va
 1ra2ta1tbWvbfdp/A41zs94AeAAA" | base64 --decode | tar xzf -
+   
    which systemctl >/dev/null 2>&1
    case $? in
-      0)
-         # Jessie
-         systemctl restart rpimonitor >/dev/null 2>&1
-         ;;
-      *)
-         # Wheezy|Trusty
-         /etc/init.d/rpimonitor stop >/dev/null 2>&1
-         /etc/init.d/rpimonitor start >/dev/null 2>&1
-         ;;
-   esac
+        0)
+            # Jessie
+            systemctl restart rpimonitor >/dev/null 2>&1
+            ;;
+        *)
+            # Wheezy|Trusty
+            /etc/init.d/rpimonitor stop >/dev/null 2>&1
+            /etc/init.d/rpimonitor start >/dev/null 2>&1
+            ;;
+    esac
 } # PatchRPiMonitor_for_sun50iw1p1
 
 cleanupPackageLists()
 {
-   echo -e "\nCleaning up package lists"
-   rm /etc/apt/sources.list.d/armbian.list
-   apt-key del 9F0E78D5 >/dev/null 2>&1
-   apt-get update
+    echo -e "\nCleaning up package lists"
+
+    if [ -f /etc/apt/sources.list.d/armbian.list ]; then
+        #remove if not Armbian
+        if [ ! -f /etc/armbian-release ]; then 
+            rm /etc/apt/sources.list.d/armbian.list
+            apt-key del 9F0E78D5 >/dev/null 2>&1
+            apt-get update
+       fi
+    fi
 } # cleanupPackageLists
 
 echo -e "$(date) Start RPi-Monitor installation\n"
 
 echo -e "Checking for dpkg lock\c"
 while true ; do
-   fuser /var/lib/dpkg/lock >/dev/null 2>&1 || break
-   sleep 3
-   echo -e ".\c"
+    fuser /var/lib/dpkg/lock >/dev/null 2>&1 || break
+    sleep 3
+    echo -e ".\c"
 done
 
 echo -e "\nAdding Armbian package list"
 if [ ! -f /etc/apt/sources.list.d/armbian.list ]; then
-   echo 'deb http://apt.armbian.com xenial main utils xenial-desktop' > \
-   /etc/apt/sources.list.d/armbian.list
+    echo 'deb http://apt.armbian.com xenial main utils xenial-desktop' > \
+    /etc/apt/sources.list.d/armbian.list
 
-   apt-key adv --keyserver keys.gnupg.net --recv-keys 0x93D6889F9F0E78D5 >/dev/null 2>&1
+    apt-key adv --keyserver keys.gnupg.net --recv-keys 0x93D6889F9F0E78D5 >/dev/null 2>&1
 
-   if [ $? -ne 0 ]; then
-      useEncodedPublicKey
-   fi
+    if [ $? -ne 0 ]; then
+        useEncodedPublicKey
+    fi
 fi
 
 echo -e "\nUpdating package lists"
