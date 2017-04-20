@@ -3,6 +3,9 @@
 # Install rpimonitor on a pine64 running ubuntu (may work for debian also)
 # Heavily based on work from tkaiser
 #
+# Run latest version directly from github when logged in as root / sudo with
+# wget -q -O - https://raw.githubusercontent.com/pfeerick/pine64-scripts/master/install-rpimonitor.sh | /bin/bash
+#
 # Original code lifted from http://kaiser-edv.de/tmp/4U4tkD/install-rpi-monitor-for-a64.sh
 # With some other code also provided by tkaiser
 #
@@ -248,10 +251,11 @@ apt-get update
 
 echo -e "\nInstalling rpimonitor (this may take several minutes)..."
 apt-get -f -qq -y install rpimonitor
+/usr/share/rpimonitor/scripts/updatePackagesStatus.pl &
 
 cleanupPackageLists
 
 PatchRPiMonitor_for_sun50iw1p1
 
 echo -e "\n$(date) Finished RPi-Monitor installation"
-echo -e " \n\nNow you're able to enjoy RPi-Monitor at http://$((ifconfig -a) | sed -n '/inet addr/s/.*addr.\([^ ]*\) .*/\1/p' | head -1):8888"
+echo -e " \nNow you're able to enjoy RPi-Monitor at http://$((ifconfig -a) | sed -n '/inet addr/s/.*addr.\([^ ]*\) .*/\1/p' | head -1):8888"
