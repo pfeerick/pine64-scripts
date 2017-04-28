@@ -57,4 +57,4 @@ alsactl restore
 echo -e "\nTry your sound again now, there is no need to reboot your Pinebook.\n"
 echo -e "If it works, you can delete the asound.state file which was backed up"
 echo -e "to /tmp. Otherwise, you may want to restore that backup copy to "
-echo -e "/var/lib/alsa/asound.state\n"
+echo -e "/var/lib/alsa/asound.state and run 'alsactl restore' to reapply it.\n"
