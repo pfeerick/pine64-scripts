@@ -2,8 +2,8 @@ state.audiocodec {
 	control.1 {
 		iface MIXER
 		name 'AIF1 ADC timeslot 0 volume'
-		value.0 160
-		value.1 160
+		value.0 0
+		value.1 0
 		comment {
 			access 'read write'
 			type INTEGER
@@ -11,15 +11,15 @@ state.audiocodec {
 			range '0 - 255'
 			dbmin -11925
 			dbmax 7200
-			dbvalue.0 75
-			dbvalue.1 75
+			dbvalue.0 -11925
+			dbvalue.1 -11925
 		}
 	}
 	control.2 {
 		iface MIXER
 		name 'AIF1 ADC timeslot 1 volume'
-		value.0 160
-		value.1 160
+		value.0 0
+		value.1 0
 		comment {
 			access 'read write'
 			type INTEGER
@@ -27,15 +27,15 @@ state.audiocodec {
 			range '0 - 255'
 			dbmin -11925
 			dbmax 7200
-			dbvalue.0 75
-			dbvalue.1 75
+			dbvalue.0 -11925
+			dbvalue.1 -11925
 		}
 	}
 	control.3 {
 		iface MIXER
 		name 'AIF1 DAC timeslot 0 volume'
-		value.0 160
-		value.1 160
+		value.0 165
+		value.1 165
 		comment {
 			access 'read write'
 			type INTEGER
@@ -43,15 +43,15 @@ state.audiocodec {
 			range '0 - 255'
 			dbmin -11925
 			dbmax 7200
-			dbvalue.0 75
-			dbvalue.1 75
+			dbvalue.0 450
+			dbvalue.1 450
 		}
 	}
 	control.4 {
 		iface MIXER
 		name 'AIF1 DAC timeslot 1 volume'
-		value.0 160
-		value.1 160
+		value.0 0
+		value.1 0
 		comment {
 			access 'read write'
 			type INTEGER
@@ -59,8 +59,8 @@ state.audiocodec {
 			range '0 - 255'
 			dbmin -11925
 			dbmax 7200
-			dbvalue.0 75
-			dbvalue.1 75
+			dbvalue.0 -11925
+			dbvalue.1 -11925
 		}
 	}
 	control.5 {
@@ -98,8 +98,8 @@ state.audiocodec {
 	control.7 {
 		iface MIXER
 		name 'AIF2 ADC volume'
-		value.0 160
-		value.1 160
+		value.0 0
+		value.1 0
 		comment {
 			access 'read write'
 			type INTEGER
@@ -107,15 +107,15 @@ state.audiocodec {
 			range '0 - 255'
 			dbmin -11925
 			dbmax 7200
-			dbvalue.0 75
-			dbvalue.1 75
+			dbvalue.0 -11925
+			dbvalue.1 -11925
 		}
 	}
 	control.8 {
 		iface MIXER
 		name 'AIF2 DAC volume'
-		value.0 160
-		value.1 160
+		value.0 0
+		value.1 0
 		comment {
 			access 'read write'
 			type INTEGER
@@ -123,8 +123,8 @@ state.audiocodec {
 			range '0 - 255'
 			dbmin -11925
 			dbmax 7200
-			dbvalue.0 75
-			dbvalue.1 75
+			dbvalue.0 -11925
+			dbvalue.1 -11925
 		}
 	}
 	control.9 {
@@ -146,22 +146,6 @@ state.audiocodec {
 	control.10 {
 		iface MIXER
 		name 'ADC volume'
-		value.0 160
-		value.1 160
-		comment {
-			access 'read write'
-			type INTEGER
-			count 2
-			range '0 - 255'
-			dbmin -11925
-			dbmax 7200
-			dbvalue.0 75
-			dbvalue.1 75
-		}
-	}
-	control.11 {
-		iface MIXER
-		name 'DAC volume'
 		value.0 0
 		value.1 0
 		comment {
@@ -173,6 +157,22 @@ state.audiocodec {
 			dbmax 7200
 			dbvalue.0 -11925
 			dbvalue.1 -11925
+		}
+	}
+	control.11 {
+		iface MIXER
+		name 'DAC volume'
+		value.0 160
+		value.1 160
+		comment {
+			access 'read write'
+			type INTEGER
+			count 2
+			range '0 - 255'
+			dbmin -11925
+			dbmax 7200
+			dbvalue.0 75
+			dbvalue.1 75
 		}
 	}
 	control.12 {
@@ -208,7 +208,7 @@ state.audiocodec {
 	control.14 {
 		iface MIXER
 		name 'earpiece volume'
-		value 30
+		value 0
 		comment {
 			access 'read write'
 			type INTEGER
@@ -216,13 +216,13 @@ state.audiocodec {
 			range '0 - 31'
 			dbmin -4350
 			dbmax 300
-			dbvalue.0 150
+			dbvalue.0 -4350
 		}
 	}
 	control.15 {
 		iface MIXER
 		name 'speaker volume'
-		value 26
+		value 23
 		comment {
 			access 'read write'
 			type INTEGER
@@ -230,13 +230,13 @@ state.audiocodec {
 			range '0 - 31'
 			dbmin -4800
 			dbmax -150
-			dbvalue.0 -900
+			dbvalue.0 -1350
 		}
 	}
 	control.16 {
 		iface MIXER
 		name 'headphone volume'
-		value 59
+		value 0
 		comment {
 			access 'read write'
 			type INTEGER
@@ -244,7 +244,7 @@ state.audiocodec {
 			range '0 - 63'
 			dbmin -6300
 			dbmax 0
-			dbvalue.0 -400
+			dbvalue.0 -6300
 		}
 	}
 	control.17 {
@@ -264,7 +264,7 @@ state.audiocodec {
 	control.18 {
 		iface MIXER
 		name 'MIC1 boost AMP gain control'
-		value 4
+		value 0
 		comment {
 			access 'read write'
 			type INTEGER
@@ -272,7 +272,7 @@ state.audiocodec {
 			range '0 - 7'
 			dbmin 0
 			dbmax 1400
-			dbvalue.0 800
+			dbvalue.0 0
 		}
 	}
 	control.19 {
@@ -292,7 +292,7 @@ state.audiocodec {
 	control.20 {
 		iface MIXER
 		name 'MIC2 boost AMP gain control'
-		value 4
+		value 0
 		comment {
 			access 'read write'
 			type INTEGER
@@ -300,7 +300,7 @@ state.audiocodec {
 			range '0 - 7'
 			dbmin 0
 			dbmax 1400
-			dbvalue.0 800
+			dbvalue.0 0
 		}
 	}
 	control.21 {
@@ -964,7 +964,7 @@ state.audiocodec {
 	control.82 {
 		iface MIXER
 		name 'DACR Mixer AIF1DA0R Switch'
-		value false
+		value true
 		comment {
 			access 'read write'
 			type BOOLEAN
@@ -1004,7 +1004,7 @@ state.audiocodec {
 	control.86 {
 		iface MIXER
 		name 'DACL Mixer AIF1DA0L Switch'
-		value false
+		value true
 		comment {
 			access 'read write'
 			type BOOLEAN
@@ -1296,7 +1296,7 @@ state.audiocodec {
 	control.112 {
 		iface MIXER
 		name 'Headphone Switch'
-		value true
+		value false
 		comment {
 			access 'read write'
 			type BOOLEAN
