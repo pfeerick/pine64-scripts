@@ -30,13 +30,3 @@ echo -ne "done!\n"
 
 echo -ne "\nYou can now launch the GNOME Control Center from Applications -> System Tools.\n"
 echo -ne "This will give you access to all the settings modules, including Online Accounts.\n\n"
-
-read -t 10 -p "Do you want to open the Online Accounts module now (y/n)?" choice
-
-case "$choice" in
-  y|Y ) echo -ne "\nOpening GNOME Online Accounts module... " && \
-        exec=env XDG_CURRENT_DESKTOP=GNOME gnome-control-center online-accounts >/dev/null 2>&1 && \
-        echo -ne "All done!\n";;
-  n|N ) exit 0;;
-  *) echo -ne "\n\nInvalid input or timeout... Exiting!\n"
-esac
