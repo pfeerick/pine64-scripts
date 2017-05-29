@@ -72,8 +72,10 @@ fi
 
 #patch provider path and add desktop icon
 if [ -n $SUDO_USER ]; then
+    echo -ne "Adding desktop shortcut, menu item and file associations for Arduino IDE ... "
 	sed -i -e 's/RESOURCE_NAME=cc.arduino.arduinoide/RESOURCE_NAME=arduino-arduinoide/g' /opt/arduino-1.8.2/install.sh
-	su $SUDO_USER /opt/arduino-1.8.2/install.sh
+	su $SUDO_USER /opt/arduino-1.8.2/install.sh > /dev/null 2>&1
+    echo -ne "done\n"
 else
 	echo -ne "Not running as sudo, can't run install.sh as normal user\n"
 	echo -ne "So you'll need to run /opt/arduino-1.8.2/install.sh yourself!\n"
