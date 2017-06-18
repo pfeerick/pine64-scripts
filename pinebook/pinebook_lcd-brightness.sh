@@ -17,7 +17,7 @@ MINIMUM_BRIGHTNESS=5
 MAXIMUM_BRIGHTNESS=$(</sys/class/backlight/lcd0/max_brightness)
 ACTUAL_BRIGHTNESS=$(</sys/class/backlight/lcd0/actual_brightness)
 
-while getopts ":i:d:s:v" opt; do
+while getopts ":i:d:s:vb" opt; do
   case $opt in
     i)
       NEW_BRIGHTNESS=$((ACTUAL_BRIGHTNESS + $OPTARG))
@@ -33,6 +33,11 @@ while getopts ":i:d:s:v" opt; do
       ;;
     v)
       echo "Minimum brightness: $MINIMUM_BRIGHTNESS, Maximum: $MAXIMUM_BRIGHTNESS"
+      ;;
+    b)
+      chown root:gpio /sys/class/backlight/lcd0/actual_brightness /sys/class/backlight/lcd0/max_brightness /sys/class/backlight/lcd0/brightness
+      chmod 664 /sys/class/backlight/lcd0/actual_brightness /sys/class/backlight/lcd0/max_brightness /sys/class/backlight/lcd0/brightness
+      exit 0
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2

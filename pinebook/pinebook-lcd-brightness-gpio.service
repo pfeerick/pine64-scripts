@@ -1,0 +1,10 @@
+[Unit]
+Description=Enable LCD Brightness GPIO access
+After=systemd-modules-load.service local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/pinebook_lcd-brightness.sh -b
+
+[Install]
+WantedBy=multi-user.target
