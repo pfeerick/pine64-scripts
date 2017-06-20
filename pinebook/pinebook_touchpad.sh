@@ -15,6 +15,13 @@
 #          touchpad off|0       (disables)
 #
 #
+
+# check if X server is accessible
+if ! xset q >/dev/null 2>&1; then
+    echo "No X server at \$DISPLAY [$DISPLAY]... Aborting!!!" >&2
+    exit 1
+fi
+
 # get the touchpad device number TDEVICE
 for line in $(xinput list |grep -i "hailuck" |grep -i "pointer"); do
   for word in $(echo $line |grep -i "id"); do
