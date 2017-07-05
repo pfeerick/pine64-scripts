@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+#  Written 2017 by Peter Feerick, GPLv3 licensed
+#
+#  Depends on evtest to function, run 'sudo apt install evtest'
+#  on a debian based system to install if missing.
 
 LAST_HEADPHONE_STATE=2 #invalid value to guarantee first check
 LAST_MIC_STATE=2
