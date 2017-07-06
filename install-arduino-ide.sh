@@ -15,11 +15,11 @@ if [ -z $SUDO_COMMAND ]; then
 fi
 
 #download and unpack
-echo -ne "Arduino IDE 1.8.2 Install Script\n\n"
-echo -ne "Downloading Arduino IDE 1.8.2 ... "
+echo -ne "Arduino IDE 1.8.3 Install Script\n\n"
+echo -ne "Downloading Arduino IDE 1.8.3 ... "
 wget -q -P /tmp/ https://downloads.arduino.cc/arduino-1.8.3-linuxarm.tar.xz 2>&1
 echo -ne "done\n"
-echo -ne "Unpacking to /opt/arduino-1.8.2/ ... "
+echo -ne "Unpacking to /opt/arduino-1.8.3/ ... "
 tar xf /tmp/arduino-1.8.3-linuxarm.tar.xz --directory /opt/
 echo -ne "done\n"
 
@@ -77,7 +77,7 @@ if [ -n $SUDO_USER ]; then
     echo -ne "done\n"
 else
 	echo -ne "Not running as sudo, can't run install.sh as normal user\n"
-	echo -ne "So you'll need to run /opt/arduino-1.8.2/install.sh yourself!\n"
+	echo -ne "So you'll need to run /opt/arduino-1.8.3/install.sh yourself!\n"
 fi
 
 #completion messages
