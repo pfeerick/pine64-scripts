@@ -17,10 +17,10 @@ fi
 #download and unpack
 echo -ne "Arduino IDE 1.8.2 Install Script\n\n"
 echo -ne "Downloading Arduino IDE 1.8.2 ... "
-wget -q -P /tmp/ https://downloads.arduino.cc/arduino-1.8.2-linuxarm.tar.xz 2>&1
+wget -q -P /tmp/ https://downloads.arduino.cc/arduino-1.8.3-linuxarm.tar.xz 2>&1
 echo -ne "done\n"
 echo -ne "Unpacking to /opt/arduino-1.8.2/ ... "
-tar xf /tmp/arduino-1.8.2-linuxarm.tar.xz --directory /opt/
+tar xf /tmp/arduino-1.8.3-linuxarm.tar.xz --directory /opt/
 echo -ne "done\n"
 
 #enable armhf packages support
@@ -53,7 +53,7 @@ if [ -n $SUDO_USER ]; then
 	#create directory if it doesn't actually exist, which it shouldn't on a clean system
 	[ ! -d "/home/$SUDO_USER/.jssc/linux" ] && mkdir -p "/home/$SUDO_USER/.jssc/linux"
 
-	unzip -p "/opt/arduino-1.8.2/lib/jssc-2.8.0.jar" "libs/linux/libjSSC-2.8_armhf.so" > "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so"
+	unzip -p "/opt/arduino-1.8.3/lib/jssc-2.8.0.jar" "libs/linux/libjSSC-2.8_armhf.so" > "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so"
 	ln -s "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so" "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so"
 	echo -ne "done\n"
 else
@@ -70,11 +70,10 @@ else
 	echo -ne "Not running via sudo, can't determine username to add to dialout group!\n"
 fi
 
-#patch provider path and add desktop icon
+#add desktop icon using provided install script
 if [ -n $SUDO_USER ]; then
     echo -ne "Adding desktop shortcut, menu item and file associations for Arduino IDE ... "
-	sed -i -e 's/RESOURCE_NAME=cc.arduino.arduinoide/RESOURCE_NAME=arduino-arduinoide/g' /opt/arduino-1.8.2/install.sh
-	su $SUDO_USER /opt/arduino-1.8.2/install.sh > /dev/null 2>&1
+	su $SUDO_USER /opt/arduino-1.8.3/install.sh > /dev/null 2>&1
     echo -ne "done\n"
 else
 	echo -ne "Not running as sudo, can't run install.sh as normal user\n"
@@ -95,5 +94,5 @@ if [ -n $SUDO_USER ]; then
 fi
 
 #notify user they can also delete the downloaded arduino archive
-echo -ne "\n\nAdditionally, you can delete /tmp/arduino-1.8.2-linuxarm.tar.xz"
+echo -ne "\n\nAdditionally, you can delete /tmp/arduino-1.8.3-linuxarm.tar.xz"
 echo -ne "\nif you wish to as it is no longer needed.\n"
