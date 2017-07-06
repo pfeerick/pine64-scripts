@@ -18,7 +18,14 @@ fi
 echo -ne "Arduino IDE 1.8.3 Install Script\n\n"
 echo -ne "Downloading Arduino IDE 1.8.3 ... "
 wget -q -P /tmp/ https://downloads.arduino.cc/arduino-1.8.3-linuxarm.tar.xz 2>&1
-echo -ne "done\n"
+if [ $? -ne 0 ]; then
+   echo -ne "fail\n"
+   echo -ne "Unable to successfully download package... please try again!\n\n"
+   exit 1
+else
+   echo -ne "done\n"
+fi
+
 echo -ne "Unpacking to /opt/arduino-1.8.3/ ... "
 tar xf /tmp/arduino-1.8.3-linuxarm.tar.xz --directory /opt/
 echo -ne "done\n"
