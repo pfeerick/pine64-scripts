@@ -100,7 +100,6 @@ VerifyAndFixFiles() {
 	fi
 } # VerifyAndFixFiles
 
-
 # Most of the below has been shameless copied from the Armbian project's armbianmonitor,
 # because they did an amazing job at making a create diagnostic report! Specifically:
 
@@ -294,14 +293,14 @@ UploadSupportLogs() {
 		| curl -F 'sprunge=<-' http://sprunge.us
 
 	echo -e "Please post the above URL in the pine64 forum where you've been asked for it."
-}
+} # UploadSupportLogs
 
 RequireRoot() {
 	if [ "$(id -u)" != "0" ]; then
 		echo "This function requires root privleges - run as root or through sudo. Exiting" >&2
 		exit 1
 	fi
-}
+} # RequireRoot
 
 DisplayUsage() {
 	#echo -e "Usage: ${BOLD}${0##*/} [-h] [-b] [-c \$path] [-d \$device] [-D] [-m] [-p] [-r] [-u]${NC}\n"
@@ -364,3 +363,4 @@ ParseOptions() {
 } # ParseOptions
 
 Main "$@"
+
