@@ -6,7 +6,7 @@
 # Written 2017 Peter Feerick and contributors, released under GPLv3 
 #
 
-Log="/var/log/pine64_diagnostics.log"
+Log="/var/log/${0##*/}.log"
 
 Main() {
 	# check if stdout is a terminal...
@@ -122,7 +122,7 @@ GenerateLog() {
 	echo -e "\n### df:\n"
 	df -h
 
-	echo -e "\n### Installed packages:\n\n$(dpkg -l | egrep "linux-")"
+	echo -e "\n### Installed packages:\n\n$(dpkg -l | egrep "linux-|openmediavault")"
 
 	echo -e "\n### Loaded modules:\n\n$(lsmod)"
 
@@ -307,17 +307,17 @@ DisplayUsage() {
 	echo -e "Usage: ${BOLD}${0##*/} [-h] [-l] [-L] [-v] [-f] [-u] [-c \$path]${NC}\n"
 	echo -e "############################################################################"
 	echo -e "\n Use ${BOLD}pine64_diagnostics${NC} for the following tasks:\n"
-	echo -e " pine64_diagnostics ${BOLD}-c /path/to/test${NC} performs disk health/performance tests"
-	echo -e " pine64_diagnostics ${BOLD}-l${NC} outputs diagnostic logs to the screen with less"
-	echo -e " pine64_diagnostics ${BOLD}-L${NC} outputs diagnostic logs to the screen as is"
-	echo -e " pine64_diagnostics ${BOLD}-v${NC} tries to diagnose corrupt packages and files"
-	echo -e " pine64_diagnostics ${BOLD}-f${NC} tries to fix detected corrupt packages"
-	echo -e " pine64_diagnostics ${BOLD}-u${NC} tries to upload the diagnostic logs for support purposes\n"
+	echo -e " ${0##*/} ${BOLD}-c /path/to/test${NC} performs disk health/performance tests"
+	echo -e " ${0##*/} ${BOLD}-l${NC} outputs diagnostic logs to the screen with less"
+	echo -e " ${0##*/} ${BOLD}-L${NC} outputs diagnostic logs to the screen as is"
+	echo -e " ${0##*/} ${BOLD}-v${NC} tries to diagnose corrupt packages and files"
+	echo -e " ${0##*/} ${BOLD}-f${NC} tries to fix detected corrupt packages"
+	echo -e " ${0##*/} ${BOLD}-u${NC} tries to upload the diagnostic logs for support purposes\n"
 	echo -e "############################################################################\n"
 } # DisplayUsage
 
 ParseOptions() {
-	while getopts 'hHlLvVfFuUc:C:' c ; do
+	while getopts 'hHlLvVfFmMuUc:C:' c ; do
 	case ${c} in
 		h|H)
 			DisplayUsage
@@ -346,6 +346,13 @@ ParseOptions() {
 			exit 0
 			;;
 
+		m|M)
+			# monitoring mode
+			echo -e "Stop monitoring using [ctrl]-[c]"
+			MonitorMode
+			exit 0
+			;;
+			
 		u|U)
 			RequireRoot
 			UploadSupportLogs
@@ -361,6 +368,97 @@ ParseOptions() {
 	esac
 	done
 } # ParseOptions
+
+MonitorMode() {
+	# $1 is the time in seconds to pause between two prints, defaults to 5 seconds
+	# This functions prints out endlessly:
+	# - time/date
+	# - average 1m load
+	# - detailed CPU statistics
+	# - Soc temperature if available
+	# - PMIC temperature if available
+	# TODO: Format output nicely
+	LastUserStat=0
+	LastNiceStat=0
+	LastSystemStat=0
+	LastIdleStat=0
+	LastIOWaitStat=0
+	LastIrqStat=0
+	LastSoftIrqStat=0
+	LastCpuStatCheck=0
+
+	DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq"
+	CPUs=normal
+	[ -f /sys/devices/virtual/thermal/thermal_zone0/temp ] && DisplayHeader="${DisplayHeader}   CPU" || SocTemp='n/a'
+	echo -e "${DisplayHeader}\c"
+	Counter=0
+	while true ; do
+		let Counter++
+		if [ ${Counter} -eq 15 ]; then
+			echo -e "\n${DisplayHeader}\c"
+			Counter=0
+		fi
+		LoadAvg=$(cut -f1 -d" " </proc/loadavg)
+		CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+		echo -e "\n$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) $(ProcessStats)\c"
+		if [ "X${SocTemp}" != "Xn/a" ]; then
+			read SocTemp </sys/devices/virtual/thermal/thermal_zone0/temp
+			if [ ${SocTemp} -ge 1000 ]; then
+				SocTemp=$(awk '{printf ("%0.1f",$1/1000); }' <<<${SocTemp})
+			fi
+			echo -e " $(printf "%4s" ${SocTemp})°C\c"
+		fi
+		sleep ${1:-5}
+	done
+} # MonitorMode
+
+ProcessStats() {
+	if [ -f /tmp/cpustat ]; then
+		# RPi-Monitor/Armbianmonitor already running and providing processed values
+		set $(awk -F" " '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' </tmp/cpustat)
+		CPULoad=$1
+		SystemLoad=$2
+		UserLoad=$3
+		NiceLoad=$4
+		IOWaitLoad=$5
+		IrqCombinedLoad=$6		
+	else
+		set $(awk -F" " '/^cpu / {print $2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8}' </proc/stat)
+		UserStat=$1
+		NiceStat=$2
+		SystemStat=$3
+		IdleStat=$4
+		IOWaitStat=$5
+		IrqStat=$6
+		SoftIrqStat=$7
+		
+		UserDiff=$(( ${UserStat} - ${LastUserStat} ))
+		NiceDiff=$(( ${NiceStat} - ${LastNiceStat} ))
+		SystemDiff=$(( ${SystemStat} - ${LastSystemStat} ))
+		IdleDiff=$(( ${IdleStat} - ${LastIdleStat} ))
+		IOWaitDiff=$(( ${IOWaitStat} - ${LastIOWaitStat} ))
+		IrqDiff=$(( ${IrqStat} - ${LastIrqStat} ))
+		SoftIrqDiff=$(( ${SoftIrqStat} - ${LastSoftIrqStat} ))
+		
+		Total=$(( ${UserDiff} + ${NiceDiff} + ${SystemDiff} + ${IdleDiff} + ${IOWaitDiff} + ${IrqDiff} + ${SoftIrqDiff} ))
+		CPULoad=$(( ( ${Total} - ${IdleDiff} ) * 100 / ${Total} ))
+		UserLoad=$(( ${UserDiff} *100 / ${Total} ))
+		SystemLoad=$(( ${SystemDiff} *100 / ${Total} ))
+		NiceLoad=$(( ${NiceDiff} *100 / ${Total} ))
+		IOWaitLoad=$(( ${IOWaitDiff} *100 / ${Total} ))
+		IrqCombinedLoad=$(( ( ${IrqDiff} + ${SoftIrqDiff} ) *100 / ${Total} ))
+
+		LastUserStat=${UserStat}
+		LastNiceStat=${NiceStat}
+		LastSystemStat=${SystemStat}
+		LastIdleStat=${IdleStat}
+		LastIOWaitStat=${IOWaitStat}
+		LastIrqStat=${IrqStat}
+		LastSoftIrqStat=${SoftIrqStat}
+	fi
+	echo -e "$(printf "%3s" ${CPULoad})%$(printf "%4s" ${SystemLoad})%$(printf "%4s" ${UserLoad})%$(printf "%4s" ${NiceLoad})%$(printf "%4s" ${IOWaitLoad})%$(printf "%4s" ${IrqCombinedLoad})%"
+
+} # ProcessStats
 
 Main "$@"
 
