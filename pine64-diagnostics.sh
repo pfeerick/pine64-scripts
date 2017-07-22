@@ -320,27 +320,32 @@ ParseOptions() {
 	while getopts 'hHlLvVfFmMuUc:C:' c ; do
 	case ${c} in
 		h|H)
+			# display usage info
 			DisplayUsage
 			exit 0
 			;;
 
 		l)
+			# generate logs and pipe to screen via less
 			GenerateLog | less
 			exit 0
 			;;
 
 		L)
+			# generate logs and output to display
 			GenerateLog
 			exit 0
 			;;
 
 		v|V)
+			# file verification mode
 			RequireRoot
 			VerifyFiles
 			exit 0
 			;;
 
 		f|F)
+			# file verification and repair mode
 			RequireRoot
 			VerifyAndFixFiles
 			exit 0
@@ -354,6 +359,7 @@ ParseOptions() {
 			;;
 
 		u|U)
+			# upload generated logs for support
 			RequireRoot
 			UploadSupportLogs
 			exit 0
