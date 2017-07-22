@@ -353,6 +353,7 @@ ParseOptions() {
 
 		m|M)
 			# monitoring mode
+			RequireRoot
 			echo -e "Stop monitoring using [ctrl]-[c]"
 			MonitorMode
 			exit 0
