@@ -303,17 +303,17 @@ RequireRoot() {
 } # RequireRoot
 
 DisplayUsage() {
-	#echo -e "Usage: ${BOLD}${0##*/} [-h] [-b] [-c \$path] [-d \$device] [-D] [-m] [-p] [-r] [-u]${NC}\n"
-	echo -e "Usage: ${BOLD}${0##*/} [-h] [-l] [-L] [-v] [-f] [-u] [-c \$path]${NC}\n"
+	echo -e "\nUsage: ${BOLD}${0##*/} [-h] [-c \$path] [-f] [-l] [-L] [-m] [-u] [-v]${NC}\n"
 	echo -e "############################################################################"
-	echo -e "\n Use ${BOLD}pine64_diagnostics${NC} for the following tasks:\n"
+	echo -e "\n Use ${BOLD}${0##*/}${NC} for the following tasks:\n"
 	echo -e " ${0##*/} ${BOLD}-c /path/to/test${NC} performs disk health/performance tests"
-	echo -e " ${0##*/} ${BOLD}-l${NC} outputs diagnostic logs to the screen with less"
-	echo -e " ${0##*/} ${BOLD}-L${NC} outputs diagnostic logs to the screen as is"
-	echo -e " ${0##*/} ${BOLD}-v${NC} tries to diagnose corrupt packages and files"
 	echo -e " ${0##*/} ${BOLD}-f${NC} tries to fix detected corrupt packages"
-	echo -e " ${0##*/} ${BOLD}-u${NC} tries to upload the diagnostic logs for support purposes\n"
-	echo -e "############################################################################\n"
+	echo -e " ${0##*/} ${BOLD}-l${NC} outputs diagnostic logs to the screen via less"
+	echo -e " ${0##*/} ${BOLD}-L${NC} outputs diagnostic logs to the screen as is"
+	echo -e " ${0##*/} ${BOLD}-m${NC} provides simple CLI monitoring"
+	echo -e " ${0##*/} ${BOLD}-u${NC} tries to upload diagnostic logs for support purposes"
+	echo -e " ${0##*/} ${BOLD}-v${NC} tries to diagnose corrupt packages and files"
+	echo -e "\n############################################################################\n"
 } # DisplayUsage
 
 ParseOptions() {
