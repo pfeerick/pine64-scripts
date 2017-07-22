@@ -1,9 +1,9 @@
 #!/bin/bash
-# This script is designed to be a general purpose diagnostic log and testing 
+# This script is designed to be a general purpose diagnostic log and testing
 # script for the pine64 and related SBC boards. It heavily borrows from code
-# used in the Armbian project's armbianmonitor. 
+# used in the Armbian project's armbianmonitor.
 #
-# Written 2017 Peter Feerick and contributors, released under GPLv3 
+# Written 2017 Peter Feerick and contributors, released under GPLv3
 #
 
 Log="/var/log/${0##*/}.log"
@@ -79,7 +79,7 @@ VerifyAndFixFiles() {
 			if [[ $? -eq 0 ]]; then
 				echo -e "\n### Updating software repositories before package reinstall..."
 				apt-get update -qq >/dev/null 2>&1
-			
+
 				echo "${STAGE2}" | while read;
 				do
 				  	echo -e "Reinstalling package: ${REPLY}"
@@ -94,8 +94,8 @@ VerifyAndFixFiles() {
 				echo -e "package files are downloaded as part of the repair process. Please resolve the"
 				echo -e "network/network issue and then try again. Exiting!\n"
 
-				exit 1 
-			fi		
+				exit 1
+			fi
 		fi
 	fi
 } # VerifyAndFixFiles
@@ -280,7 +280,7 @@ UploadSupportLogs() {
 	echo -e "Generating diagnostic logs... "
 	GenerateLog > ${Log}
 	echo -e "Running file integrity checks... "
-       	VerifyFiles >> ${Log}
+	   	VerifyFiles >> ${Log}
 
 	#check network connection
 	fping sprunge.us | grep -q alive || \
@@ -352,7 +352,7 @@ ParseOptions() {
 			MonitorMode
 			exit 0
 			;;
-			
+
 		u|U)
 			RequireRoot
 			UploadSupportLogs
@@ -421,7 +421,7 @@ ProcessStats() {
 		UserLoad=$3
 		NiceLoad=$4
 		IOWaitLoad=$5
-		IrqCombinedLoad=$6		
+		IrqCombinedLoad=$6
 	else
 		set $(awk -F" " '/^cpu / {print $2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8}' </proc/stat)
 		UserStat=$1
@@ -431,7 +431,7 @@ ProcessStats() {
 		IOWaitStat=$5
 		IrqStat=$6
 		SoftIrqStat=$7
-		
+
 		UserDiff=$(( ${UserStat} - ${LastUserStat} ))
 		NiceDiff=$(( ${NiceStat} - ${LastNiceStat} ))
 		SystemDiff=$(( ${SystemStat} - ${LastSystemStat} ))
@@ -439,7 +439,7 @@ ProcessStats() {
 		IOWaitDiff=$(( ${IOWaitStat} - ${LastIOWaitStat} ))
 		IrqDiff=$(( ${IrqStat} - ${LastIrqStat} ))
 		SoftIrqDiff=$(( ${SoftIrqStat} - ${LastSoftIrqStat} ))
-		
+
 		Total=$(( ${UserDiff} + ${NiceDiff} + ${SystemDiff} + ${IdleDiff} + ${IOWaitDiff} + ${IrqDiff} + ${SoftIrqDiff} ))
 		CPULoad=$(( ( ${Total} - ${IdleDiff} ) * 100 / ${Total} ))
 		UserLoad=$(( ${UserDiff} *100 / ${Total} ))
@@ -461,4 +461,3 @@ ProcessStats() {
 } # ProcessStats
 
 Main "$@"
-
