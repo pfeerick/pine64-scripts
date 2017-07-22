@@ -353,7 +353,6 @@ ParseOptions() {
 
 		m|M)
 			# monitoring mode
-			RequireRoot
 			echo -e "Stop monitoring using [ctrl]-[c]"
 			MonitorMode
 			exit 0
@@ -406,7 +405,13 @@ MonitorMode() {
 			Counter=0
 		fi
 		LoadAvg=$(cut -f1 -d" " </proc/loadavg)
-		CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+		if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
+			CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+		elif [ -r /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq ]; then
+			CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq) 2>/dev/null
+		else
+			CpuFreq='n/a'
+		fi
 		echo -e "\n$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) $(ProcessStats)\c"
 		if [ "X${SocTemp}" != "Xn/a" ]; then
 			read SocTemp </sys/devices/virtual/thermal/thermal_zone0/temp
