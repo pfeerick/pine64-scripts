@@ -6,16 +6,27 @@
 # Documentation for this script on GitHub
 # https://github.com/pfeerick/pine64-scripts/wiki/Pinebook-LCD-Brightness-script
 
+# Switch paths to twiddle depending on whether sunxidrm active or not
+if [ -d /sys/module/sunxidrm ]; then
+  ACTUAL_BRIGHTNESS_PATH="/sys/devices/platform/sunxi-drm/backlight/lcd0/actual_brightness"
+  MAX_BRIGHTNESS_PATH="/sys/devices/platform/sunxi-drm/backlight/lcd0/max_brightness"
+  BRIGHTNESS_PATH="/sys/class/backlight/lcd0/brightness"
+else
+  ACTUAL_BRIGHTNESS_PATH="/sys/class/backlight/lcd0/actual_brightness"
+  MAX_BRIGHTNESS_PATH="/sys/class/backlight/lcd0/max_brightness"
+  BRIGHTNESS_PATH="/sys/class/backlight/lcd0/brightness"
+fi
+
 # Check if required access permissions are available...
-if [ ! -r "/sys/class/backlight/lcd0/actual_brightness" ] || [ ! -r "/sys/class/backlight/lcd0/max_brightness" ] || [ ! -w "/sys/class/backlight/lcd0/brightness" ]; then
+if [ ! -r ${ACTUAL_BRIGHTNESS_PATH} ] || [ ! -r ${MAX_BRIGHTNESS_PATH} ] ||  [ ! -w ${BRIGHTNESS_PATH} ]; then
   echo "This script doesn't have the necessary permissions to read or change the LCD brightness!"
   echo "Changes to permisisons or running as a root user is required."
   exit 1
 fi
 
 MINIMUM_BRIGHTNESS=5
-MAXIMUM_BRIGHTNESS=$(</sys/class/backlight/lcd0/max_brightness)
-ACTUAL_BRIGHTNESS=$(</sys/class/backlight/lcd0/actual_brightness)
+MAXIMUM_BRIGHTNESS=$(<${MAX_BRIGHTNESS})
+ACTUAL_BRIGHTNESS=$(<${ACTUAL_BRIGHTNESS})
 
 while getopts ":i:d:s:vb" opt; do
   case $opt in
@@ -35,8 +46,8 @@ while getopts ":i:d:s:vb" opt; do
       echo "Minimum brightness: $MINIMUM_BRIGHTNESS, Maximum: $MAXIMUM_BRIGHTNESS"
       ;;
     b)
-      chown root:gpio /sys/class/backlight/lcd0/actual_brightness /sys/class/backlight/lcd0/max_brightness /sys/class/backlight/lcd0/brightness
-      chmod 664 /sys/class/backlight/lcd0/actual_brightness /sys/class/backlight/lcd0/max_brightness /sys/class/backlight/lcd0/brightness
+      chown root:gpio ${ACTUAL_BRIGHTNESS_PATH} ${MAX_BRIGHTNESS_PATH} ${BRIGHTNESS_PATH}
+      chmod 664 ${ACTUAL_BRIGHTNESS_PATH} ${MAX_BRIGHTNESS_PATH} ${BRIGHTNESS_PATH}
       exit 0
       ;;
     \?)
@@ -57,22 +68,21 @@ if [ $# -eq 0 ]; then
 fi
 
 #if we've gotten this far, sanity check setting and apply
-if [ ! -z $NEW_BRIGHTNESS ]; then
-  if [[ $NEW_BRIGHTNESS != ?(-)+([0-9]) ]]; then
+if [ ! -z ${NEW_BRIGHTNESS} ]; then
+  if [[ ${NEW_BRIGHTNESS} != ?(-)+([0-9]) ]]; then
     echo "Integer input expected. '$NEW_BRIGHTNESS' is NOT an integer!"
     exit 1
   fi
 
-  if [ $NEW_BRIGHTNESS -lt $MINIMUM_BRIGHTNESS ]; then
+  if [ ${NEW_BRIGHTNESS} -lt ${MINIMUM_BRIGHTNESS} ]; then
      echo "Below mimimum brightness threshold"
      exit 1
   fi
 
-  if [ $NEW_BRIGHTNESS -gt  $MAXIMUM_BRIGHTNESS ]; then
+  if [ ${NEW_BRIGHTNESS} -gt ${MAXIMUM_BRIGHTNESS} ]; then
     echo "Above maximum brightness threshold"
     exit 1
   fi
 
-  echo  $NEW_BRIGHTNESS > /sys/class/backlight/lcd0/brightness
+  echo  ${NEW_BRIGHTNESS} > ${BRIGHTNESS_PATH}
 fi
-
