@@ -133,6 +133,9 @@ GenerateLog() {
 	echo -e "\n### Kernel version:\n"
 	uname -a
 
+        echo -e "Searching for info on flash media... "
+        get_flash_information >>${Log}
+
 	echo -e "\n### Current sysinfo:\n\n$(iostat -p ALL | grep -v "^loop")\n\n$(vmstat -w)\n\n$(free -h)\n\n$(dmesg | tail -n 250)"
 } # GenerateLog
 
@@ -267,6 +270,19 @@ GetDevice() {
 	fi
 } # GetDevice
 
+get_flash_information() {
+	# http://www.bunniestudios.com/blog/?page_id=1022
+	find /sys -name oemid | while read Device ; do
+		DeviceNode="${Device%/*}"
+		DeviceName="${DeviceNode##*/}"
+		echo -e "\n### ${DeviceName} info:\n"
+		find "${DeviceNode}" -maxdepth 1 -type f | while read ; do
+			NodeName="${REPLY##*/}"
+			echo -e "$(printf "%20s" ${NodeName}): $(cat "${DeviceNode}/${NodeName}" | tr '\n' " ")"
+		done
+	done
+} # get_flash_information
+
 UploadSupportLogs() {
 	#prevent colour escape sequences in log
 	BOLD=''
@@ -287,7 +303,7 @@ UploadSupportLogs() {
 	echo -e "Generating diagnostic logs... "
 	GenerateLog > ${Log}
 	echo -e "Running file integrity checks... "
-	   	VerifyFiles >> ${Log}
+   	VerifyFiles >> ${Log}
 
 	#check network connection
 	fping sprunge.us | grep -q alive || \
