@@ -127,8 +127,15 @@ GenerateLog() {
 
 	echo -e "\n### Loaded modules:\n\n$(lsmod)"
 
-	echo -e "\n### package version:\n"
-	apt-cache policy linux-pine64-package
+        if [[ $(dpkg-query -W -f='${Status}' linux-pine64-package 2>/dev/null | grep -c "ok installed") == "1" ]]; then
+                echo -e "\n### linux-pine64-package version:\n"
+                apt-cache policy linux-pine64-package
+        fi
+
+        if [[ $(dpkg-query -W -f='${Status}' linux-rock64-package 2>/dev/null | grep -c "ok installed") == "1" ]]; then
+                echo -e "\n### linux-rock64-package version:\n"
+                apt-cache policy linux-rock64-package
+        fi
 
 	echo -e "\n### Kernel version:\n"
 	uname -a
