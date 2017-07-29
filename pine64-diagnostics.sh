@@ -142,8 +142,11 @@ GenerateLog() {
 
         echo -e "Searching for info on flash media... "
         get_flash_information >>${Log}
+	which iostat >/dev/null 2>&1 && \
 
-	echo -e "\n### Current sysinfo:\n\n$(iostat -p ALL | grep -v "^loop")\n\n$(vmstat -w)\n\n$(free -h)\n\n$(dmesg | tail -n 250)"
+	echo -e "\n### Current sysinfo:\n\n"
+	which iostat >/dev/null 2>&1 && echo -e "$(iostat -p ALL | grep -v '^loop')\n\n"
+	echo -e "$(vmstat -w)\n\n$(free -h)\n\n$(dmesg | tail -n 250)"
 } # GenerateLog
 
 CheckCard() {
