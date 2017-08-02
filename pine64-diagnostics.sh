@@ -7,7 +7,7 @@
 #
 
 Log="/var/log/${0##*/}.log"
-VerifyRepairExcludes="/etc/|/boot/|cache|getty"
+VerifyRepairExcludes="/etc/|/boot/|cache|getty|/var/lib/smartmontools/"
 
 Main() {
 	# check if stdout is a terminal...
