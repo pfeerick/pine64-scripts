@@ -6,7 +6,13 @@
 # Written 2017 Peter Feerick and contributors, released under GPLv3
 #
 
-Log="/var/log/${0##*/}.log"
+#if user doesn't have permission for /var/log, write to /tmp
+if [ -w /var/log ]; then
+	Log="/var/log/${0##*/}.log"
+else
+	Log="/tmp/${0##*/}.log"
+fi
+
 VerifyRepairExcludes="/etc/|/boot/|cache|getty|/var/lib/smartmontools/"
 
 Main() {
