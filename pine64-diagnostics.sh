@@ -108,11 +108,11 @@ VerifyAndFixFiles() {
 } # VerifyAndFixFiles
 
 # Most of the below has been shameless copied from the Armbian project's armbianmonitor,
-# because they did an amazing job at making a create diagnostic report! Specifically:
+# because they did an amazing job at making a great diagnostic report! Specifically:
 
 # https://github.com/armbian/build/blob/master/packages/bsp/armbianmonitor/armbianmonitor-daemon
-# https://github.com/armbian/build/blob/master/packages/bsp/armbianmonitor/armbianmonitor
-# https://github.com/armbian/build/blob/master/packages/bsp/armhwinfo
+# https://github.com/armbian/build/blob/master/packages/bsp/common/usr/bin/armbianmonitor
+# https://github.com/armbian/build/blob/master/packages/bsp/common/etc/init.d/armhwinfo
 GenerateLog() {
 	echo -e "\n### dmesg:\n"
 	dmesg
