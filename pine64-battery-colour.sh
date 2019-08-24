@@ -20,7 +20,7 @@ BATT_PRESENT=$(<${BATT_PATH}/present)
 if [ "$BATT_PRESENT" = "1" ]; then
 	BATT_STATUS=$(<${BATT_PATH}/status)
 
-if ! which bc > /dev/null; then
+	if command -v "bc" >/dev/null 2>&1 ; then
 		BATT_VOLTAGE=$(<${BATT_PATH}/voltage_now)
 		BATT_VOLTAGE=$(echo " (($BATT_VOLTAGE/10000)*0.01 ) "|bc)
 	else
