@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ARDUINO_IDE_VER="1.8.10"
+ARDUINO_IDE_URL="https://downloads.arduino.cc/arduino-1.8.10-linuxarm.tar.xz"
+
 #check for root priv
 if [ "$(id -u)" != "0" ]; then
 	echo -ne "This script must be executed as root. Exiting\n" >&2
@@ -15,9 +18,9 @@ if [ -z $SUDO_COMMAND ]; then
 fi
 
 #download and unpack
-echo -ne "Arduino IDE 1.8.5 Install Script\n\n"
-echo -ne "Downloading Arduino IDE 1.8.5 ... "
-wget -q -P /tmp/ https://downloads.arduino.cc/arduino-1.8.5-linuxarm.tar.xz 2>&1
+echo -ne "Arduino IDE ${ARDUINO_IDE_VER} Install Script\n\n"
+echo -ne "Downloading Arduino IDE ${ARDUINO_IDE_VER} ... "
+wget -q -O "/tmp/arduino-linuxarm.tar.xz" ${ARDUINO_IDE_URL} 2>&1
 if [ $? -ne 0 ]; then
 	echo -ne "fail\n"
 	echo -ne "Unable to successfully download package... please try again!\n\n"
@@ -26,8 +29,8 @@ else
 	echo -ne "done\n"
 fi
 
-#echo -ne "Unpacking to /opt/arduino-1.8.5/ ... "
-tar xf /tmp/arduino-1.8.5-linuxarm.tar.xz --directory /opt/
+echo -ne "Unpacking to /opt/arduino-${ARDUINO_IDE_VER}/ ... "
+tar xf /tmp/arduino-linuxarm.tar.xz --directory /opt/
 echo -ne "done\n"
 
 #enable armhf packages support
@@ -60,7 +63,7 @@ if [ -n $SUDO_USER ]; then
 	#create directory if it doesn't actually exist, which it shouldn't on a clean system
 	[ ! -d "/home/$SUDO_USER/.jssc/linux" ] && mkdir -p "/home/$SUDO_USER/.jssc/linux"
 
-	unzip -p "/opt/arduino-1.8.5/lib/jssc-2.8.0-arduino1.jar" "libs/linux/libjSSC-2.8_armhf.so" > "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so"
+	unzip -p "/opt/arduino-${ARDUINO_IDE_VER}/lib/jssc-2.8.0-arduino1.jar" "libs/linux/libjSSC-2.8_armhf.so" > "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so"
 	ln -s "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so" "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so"
 	echo -ne "done\n"
 else
@@ -80,11 +83,11 @@ fi
 #add desktop icon using provided install script
 if [ -n $SUDO_USER ]; then
 	echo -ne "Adding desktop shortcut, menu item and file associations for Arduino IDE ... "
-	su $SUDO_USER /opt/arduino-1.8.5/install.sh > /dev/null 2>&1
+	su $SUDO_USER /opt/arduino-${ARDUINO_IDE_VER}/install.sh > /dev/null 2>&1
 	echo -ne "done\n"
 else
 	echo -ne "Not running as sudo, can't run install.sh as normal user\n"
-	echo -ne "So you'll need to run /opt/arduino-1.8.5/install.sh yourself!\n"
+	echo -ne "So you'll need to run /opt/arduino-${ARDUINO_IDE_VER}/install.sh yourself!\n"
 fi
 
 #completion messages
@@ -101,5 +104,5 @@ if [ -n $SUDO_USER ]; then
 fi
 
 #notify user they can also delete the downloaded arduino archive
-echo -ne "\n\nAdditionally, you can delete /tmp/arduino-1.8.5-linuxarm.tar.xz"
+echo -ne "\n\nAdditionally, you can delete /tmp/arduino-${ARDUINO_IDE_VER}-linuxarm.tar.xz"
 echo -ne "\nif you wish to as it is no longer needed.\n"
