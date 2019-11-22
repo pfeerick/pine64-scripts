@@ -20,10 +20,10 @@ fi
 main() {
 	downloadPackage
 	unpackIDE
-	updateRepos
+	armhfEnable
 	installDependencies
 	fixGTK
-	fixSerial
+	fixSerialMonitor
 	fixPermissions
 	desktopIcon
 
@@ -66,7 +66,7 @@ unpackIDE() {
 }
 
 #enable armhf packages support
-updateRepos() {
+armhfEnable() {
 	echo -ne "Enable armhf package support and update software repository ... "
 	dpkg --add-architecture armhf
 	apt-get -qq update
@@ -91,7 +91,7 @@ fixGTK() {
 }
 
 #fix serial monitor error caused by wrong ~/.jssc/linux/libjSSC-2.8_armsf.so
-fixSerial() {
+fixSerialMonitor() {
 	if [ -n $SUDO_USER ]; then
 		echo -ne "Fixing up serial monitor bug ... "
 
