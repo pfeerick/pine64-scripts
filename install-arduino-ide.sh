@@ -102,7 +102,7 @@ fixSerialMonitor() {
 		#create directory if it doesn't actually exist, which it shouldn't on a clean system
 		[ ! -d "/home/$SUDO_USER/.jssc/linux" ] && mkdir -p "/home/$SUDO_USER/.jssc/linux"
 
-		unzip -p "/opt/arduino-${ARDUINO_IDE_VER}/lib/jssc-2.8.0-arduino1.jar" "libs/linux/libjSSC-2.8_armhf.so" > "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so"
+		unzip -p "/opt/arduino-${ARDUINO_IDE_VER}/lib/jssc-2.8.0-arduino4.jar" "libs/linux/libjSSC-2.8_armhf.so" > "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so"
 		ln -s "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so" "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so"
 		echo -ne "done\n"
 	else
