@@ -10,7 +10,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 #check how being elevated
-if [ -z $SUDO_COMMAND ]; then
+if [ -z "$SUDO_COMMAND" ]; then
 	echo -ne "This script relies on being run via sudo for some operations.\n"
 	echo -ne "Expect things to not work, or to have to do some extra stuff\n"
 	echo -ne "after running it if you continue.\n"
@@ -33,7 +33,7 @@ main() {
 	echo -ne "\nbut it will be pretty quick after that first run."
 
 	#notify user that they will need to log out and in again before will be able to load to a device to allow addition to dialout group to take effect
-	if [ -n $SUDO_USER ]; then
+	if [[ -n "$SUDO_USER" ]]; then
 		echo -ne "\n\nYou will need to log out and back in again to allow the addition"
 		echo -ne "\nof your username to the 'dialout' group to take effect. Failure"
 		echo -ne "\nto do so will prevent you from being able to upload to any"
@@ -92,7 +92,7 @@ fixGTK() {
 
 #fix serial monitor error caused by wrong ~/.jssc/linux/libjSSC-2.8_armsf.so
 fixSerialMonitor() {
-	if [ -n $SUDO_USER ] && [ -f "/opt/arduino-${ARDUINO_IDE_VER}/lib/jssc-2.8.0-arduino4.jar" ]; then
+	if [[ -n "$SUDO_USER" ]] && [[ -f "/opt/arduino-${ARDUINO_IDE_VER}/lib/jssc-2.8.0-arduino4.jar" ]]; then
 		echo -ne "Fixing up serial monitor bug ... "
 		#rename old files if present
 		[ -f "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so" ] && mv "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so" "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so.old"
@@ -112,9 +112,9 @@ fixSerialMonitor() {
 
 #add user to dialout group
 fixPermissions() {
-	if [ -n $SUDO_USER ]; then
+	if [[ -n "$SUDO_USER" ]]; then
 		echo -ne "Add user to the dialout group ... "
-		usermod -aG dialout $SUDO_USER
+		usermod -aG dialout "$SUDO_USER"
 		echo -ne "done\n"
 	else
 		echo -ne "Not running via sudo, can't determine username to add to dialout group!\n"
@@ -123,9 +123,9 @@ fixPermissions() {
 
 #add desktop icon using provided install script
 desktopIcon() {
-	if [ -n $SUDO_USER ]; then
+	if [[ -n "$SUDO_USER" ]]; then
 		echo -ne "Adding desktop shortcut, menu item and file associations for Arduino IDE ... "
-		su $SUDO_USER /opt/arduino-${ARDUINO_IDE_VER}/install.sh > /dev/null 2>&1
+		su "$SUDO_USER" /opt/arduino-${ARDUINO_IDE_VER}/install.sh > /dev/null 2>&1
 		echo -ne "done\n"
 	else
 		echo -ne "Not running as sudo, can't run install.sh as normal user\n"
