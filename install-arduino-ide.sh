@@ -92,9 +92,8 @@ fixGTK() {
 
 #fix serial monitor error caused by wrong ~/.jssc/linux/libjSSC-2.8_armsf.so
 fixSerialMonitor() {
-	if [ -n $SUDO_USER ]; then
+	if [ -n $SUDO_USER ] && [ -f "/opt/arduino-${ARDUINO_IDE_VER}/lib/jssc-2.8.0-arduino4.jar" ]; then
 		echo -ne "Fixing up serial monitor bug ... "
-
 		#rename old files if present
 		[ -f "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so" ] && mv "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so" "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so.old"
 		[ -f "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so" ] && mv "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so" "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so.old"
@@ -106,8 +105,8 @@ fixSerialMonitor() {
 		ln -s "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armhf.so" "/home/$SUDO_USER/.jssc/linux/libjSSC-2.8_armsf.so"
 		echo -ne "done\n"
 	else
-		echo -ne "Not sudo, so you'll have to apply the serial monitor bug fix yourself!"
-		echo -ne "As per post #21 of https://forum.arduino.cc/index.php?topic=400808.15"
+		echo -ne "Unable to apply serial monitor bug fix as not sudo or file missing!\n"
+		echo -ne "See post #21 of https://forum.arduino.cc/index.php?topic=400808.15\n"
 	fi
 }
 
