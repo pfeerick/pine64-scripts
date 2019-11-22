@@ -42,7 +42,7 @@ echo "--------------------------------------------------|----------" | tee -a ~/
 while [ 1 ]
 do
    DATE=$(date +%Y-%m-%d)
-   TIME=$(date +%H:%m:%S)
+   TIME=$(date +%H:%M:%S)
    BATT_VOLTAGE=$(awk '{printf ("%0.2f",$1/1000000); }' </sys/class/power_supply/battery/voltage_now)
    BATT_CURRENT=$(awk '{printf ("%0i",$1/1000); }' </sys/class/power_supply/battery/current_now )
    BATT_SOC=$(</sys/class/power_supply/battery/capacity)
