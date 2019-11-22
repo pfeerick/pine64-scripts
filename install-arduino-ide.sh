@@ -30,7 +30,7 @@ else
 fi
 
 echo -ne "Unpacking to /opt/arduino-${ARDUINO_IDE_VER}/ ... "
-tar xf /tmp/arduino-linuxarm.tar.xz --directory /opt/
+tar xf /tmp/arduino-linuxarm.tar.xz --directory /opt/ > /dev/null 2>&1 || { echo "Fail! Exiting script!"; exit 1; }
 echo -ne "done\n"
 
 #enable armhf packages support
