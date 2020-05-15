@@ -5,4 +5,5 @@ if [ "$(id -u)" != "0" ]; then
 	exit 1
 fi
 
+# value below 3 results in no backlight
 echo 3 > /sys/class/backlight/backlight/brightness
