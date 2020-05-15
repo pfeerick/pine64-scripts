@@ -1,0 +1,10 @@
+[Unit]
+Description=Ensure backlight brightness is above minimum value
+After=systemd-backlight@backlight:backlight.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/fix-no-backlight.sh
+
+[Install]
+WantedBy=multi-user.target

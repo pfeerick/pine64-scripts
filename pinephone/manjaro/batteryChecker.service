@@ -1,0 +1,9 @@
+[Unit]
+Description=Run batteryChecker LED notification script
+
+[Service]
+ExecStart=/usr/local/sbin/batteryChecker.sh -d
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
