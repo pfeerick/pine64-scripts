@@ -1,10 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # license:     GPLv3
 
 # Import the necessary header modules
 from time import sleep
-import sys, signal, os, argparse, datetime
+import sys, signal, argparse, datetime
 
 import RPi.GPIO as GPIO
 
