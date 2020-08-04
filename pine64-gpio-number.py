@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """Converts PC13 style GPIO designators to sysfs usable values"""
 
@@ -20,7 +20,7 @@ if __name__ == "__main__":
         print("Usage: %s <pin>" % sys.argv[0])
         sys.exit(1)
 
-    if not re.match(r'[P][B,C,H,L]{1}[0-9]{1,2}$', ARGS[0].upper()):
+    if not re.match(r'[P][BCHL][0-9]{1,2}$', ARGS[0].upper()):
         print("Input: '%s' not a valid GPIO pin reference!" % ARGS[0])
         print()
         print("It should look something like PC13, where")
